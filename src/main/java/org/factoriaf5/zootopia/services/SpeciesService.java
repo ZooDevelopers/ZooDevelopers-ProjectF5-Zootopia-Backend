@@ -1,4 +1,4 @@
-package org.factoriaf5.zootopia.service;
+package org.factoriaf5.zootopia.services;
 
 public class SpeciesService {
     

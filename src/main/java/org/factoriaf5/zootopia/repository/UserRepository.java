@@ -1,4 +1,4 @@
-package org.factoriaf5.zootopia.repositories;
+package org.factoriaf5.zootopia.repository;
 
 import org.factoriaf5.zootopia.models.User;
 

@@ -1,7 +1,7 @@
 package org.factoriaf5.zootopia.config;
 
 import java.util.Arrays;
-import java.util.Collection;
+
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .deleteCookies("JSESSIONID"))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                .requestMatchers("/api/v1/countries").permitAll()
+                // .requestMatchers("/api/v1/users").permitAll()
                 .anyRequest().authenticated())
             .httpBasic(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
