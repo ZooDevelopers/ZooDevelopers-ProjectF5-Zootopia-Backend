@@ -1,4 +1,4 @@
-package org.factoriaf5.zootopia.model;
+package org.factoriaf5.zootopia.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

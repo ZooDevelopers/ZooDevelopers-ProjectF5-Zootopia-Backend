@@ -6,7 +6,7 @@ import java.util.List;
 import org.factoriaf5.zootopia.models.User;
 
 
-import org.factoriaf5.zootopia.repositories.UserRepository;
+import org.factoriaf5.zootopia.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
