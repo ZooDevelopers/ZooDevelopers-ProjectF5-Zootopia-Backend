@@ -1,29 +1,29 @@
-package org.factoriaf5.zootopia.controllers;
+// package org.factoriaf5.zootopia.controllers;
 
 
-import java.util.List;
+// import java.util.List;
 
-import org.factoriaf5.zootopia.models.User;
-import org.factoriaf5.zootopia.services.UserService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+// import org.factoriaf5.zootopia.models.User;
+// import org.factoriaf5.zootopia.services.UserService;
 
-@RestController
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
-public class UserController {
+// import org.springframework.web.bind.annotation.GetMapping;
+// import org.springframework.web.bind.annotation.RestController;
 
-    private UserService services;
+// @RestController
+// // @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
+// public class UserController {
 
-    public UserController(UserService services) {
-        this.services = services;
-    }
+//     private UserService services;
 
-    @GetMapping(path = "/api/v1/users")
-    public List<User> index() {
+//     public UserController(UserService services) {
+//         this.services = services;
+//     }
 
-        return services.getAll();
+//     @GetMapping(path = "/api/v1/users")
+//     public List<User> index() {
 
-    }
+//         return services.getAll();
 
-}
+//     }
+
+// }
