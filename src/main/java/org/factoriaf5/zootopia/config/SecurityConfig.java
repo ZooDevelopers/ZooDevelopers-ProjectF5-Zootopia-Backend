@@ -1,9 +1,10 @@
 package org.factoriaf5.zootopia.config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 
+import java.util.Arrays;
+
+
+import org.factoriaf5.zootopia.services.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.context.annotation.Bean;
@@ -31,6 +32,12 @@ public class SecurityConfig {
     @Value("${api-endpoint}")
     String endpoint;
 
+    JpaUserDetailsService jpaUserDetailsService;
+
+        public SecurityConfig(JpaUserDetailsService jpaUserDetailsService) {
+                this.jpaUserDetailsService = jpaUserDetailsService;
+        }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -42,11 +49,13 @@ public class SecurityConfig {
                 .logoutUrl(endpoint + "/logout")
                 .deleteCookies("JSESSIONID"))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                .requestMatchers("/api/v1/countries").permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"))
+                .permitAll()
+                .requestMatchers("/api/v1/login").permitAll()
                 .requestMatchers(HttpMethod.GET, endpoint + "/users").hasAnyRole("USER", "ADMIN")
                 .requestMatchers(HttpMethod.POST, endpoint + "/users").hasRole( "ADMIN")
                 .anyRequest().authenticated())
+            .userDetailsService(jpaUserDetailsService)
             .httpBasic(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
@@ -56,20 +65,21 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfiguration() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+        CorsConfigurationSource corsConfiguration() {
+                CorsConfiguration configuration = new CorsConfiguration();
+                configuration.setAllowCredentials(true);
+                configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", configuration);
+                return source;
+        }
 
-  @Bean
+        @Bean
         PasswordEncoder passwordEncoder() {
                 return new BCryptPasswordEncoder();
         }
+
 
         
     @Bean
@@ -80,22 +90,26 @@ public class SecurityConfig {
             .roles("ADMIN")
             .build();
 
-            UserDetails minnie = User.builder()
-                                .username("minnie")
-                                .password("{bcrypt}$2a$12$8LegtLQWe717tIPvZeivjuqKnaAs5.bm0Q05.5GrAmcKzXw2NjoUO") // password
-                                .roles("ADMIN")
-                                .build();
+            return new InMemoryUserDetailsManager(admin);
+    }
+}
+
+//             UserDetails minnie = User.builder()
+//                                 .username("minnie")
+//                                 .password("{bcrypt}$2a$12$8LegtLQWe717tIPvZeivjuqKnaAs5.bm0Q05.5GrAmcKzXw2NjoUO") // password
+//                                 .roles("ADMIN")
+//                                 .build();
 
                
-        Collection<UserDetails> users = new ArrayList<>();
-                users.add(admin);
-                users.add(minnie);   
-        return new InMemoryUserDetailsManager(admin);
+//         Collection<UserDetails> users = new ArrayList<>();
+//                 users.add(admin);
+//                 users.add(minnie);   
+//         return new InMemoryUserDetailsManager(admin);
 
-    }
+//     }
 
 
-}
+// }
 
 
 
