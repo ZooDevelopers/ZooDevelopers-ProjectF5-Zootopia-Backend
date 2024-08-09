@@ -21,11 +21,11 @@ public class UserController {
         this.services = services;
     }
 
-    @GetMapping(path = "/api/v1/users")
-    public List<User> index() {
+//     @GetMapping(path = "/api/v1/users")
+//     public List<User> index() {
 
-        return services.getAll();
+//         return services.getAll();
 
-    }
+//     } 
 
 }

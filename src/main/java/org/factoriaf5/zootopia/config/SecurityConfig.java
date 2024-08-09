@@ -51,8 +51,6 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                 .requestMatchers("/api/v1/login").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, endpoint + "/users").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.POST, endpoint + "/users").hasRole( "ADMIN")
                 .anyRequest().authenticated())
             .userDetailsService(jpaUserDetailsService)
             .httpBasic(Customizer.withDefaults())
@@ -78,8 +76,6 @@ public class SecurityConfig {
         PasswordEncoder passwordEncoder() {
                 return new BCryptPasswordEncoder();
         }
-
-
         
     @Bean
     public InMemoryUserDetailsManager userDetailsManager() {
@@ -93,22 +89,6 @@ public class SecurityConfig {
     }
 }
 
-//             UserDetails minnie = User.builder()
-//                                 .username("minnie")
-//                                 .password("{bcrypt}$2a$12$8LegtLQWe717tIPvZeivjuqKnaAs5.bm0Q05.5GrAmcKzXw2NjoUO") // password
-//                                 .roles("ADMIN")
-//                                 .build();
-
-               
-//         Collection<UserDetails> users = new ArrayList<>();
-//                 users.add(admin);
-//                 users.add(minnie);   
-//         return new InMemoryUserDetailsManager(admin);
-
-//     }
-
-
-// }
 
 
 
