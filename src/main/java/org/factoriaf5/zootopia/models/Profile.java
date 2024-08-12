@@ -68,7 +68,7 @@ public class Profile {
         return specie;
     }
 
-    public void setCountry(Species specie) {
+    public void setSpecie(Species specie) {
         this.specie = specie;
     }
 
