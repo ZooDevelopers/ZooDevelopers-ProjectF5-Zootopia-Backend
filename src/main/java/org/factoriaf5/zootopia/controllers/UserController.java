@@ -1,11 +1,7 @@
 package org.factoriaf5.zootopia.controllers;
-
-
 import java.util.List;
-
 import org.factoriaf5.zootopia.models.User;
 import org.factoriaf5.zootopia.services.UserService;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,12 +16,5 @@ public class UserController {
     public UserController(UserService services) {
         this.services = services;
     }
-
-//     @GetMapping(path = "/api/v1/users")
-//     public List<User> index() {
-
-//         return services.getAll();
-
-//     } 
 
 }

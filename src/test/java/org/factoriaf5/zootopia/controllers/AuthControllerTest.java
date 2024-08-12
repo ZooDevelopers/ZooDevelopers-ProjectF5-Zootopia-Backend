@@ -53,4 +53,15 @@ public class AuthControllerTest {
                 is("{\"roles\":\"ROLE_ADMIN\",\"message\":\"Logged\",\"username\":\"admin\"}"));
     }
 
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void testRoleUserCanAccessPathGetUsers() throws Exception {
+        mockMvc.perform(get("/api/v1/login"))
+                .andExpect(status().isAccepted())
+                .andReturn()
+                .getResponse();
+
+
 }
+}
+
