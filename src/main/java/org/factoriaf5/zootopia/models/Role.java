@@ -25,4 +25,9 @@ public class Role {
     @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     Set<User> users;
+
+    public void setRoles(String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setRoles'");
+    }
 }
