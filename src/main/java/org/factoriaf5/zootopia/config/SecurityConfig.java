@@ -51,6 +51,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                 .requestMatchers("/api/v1/login").hasRole("ADMIN")
+                .requestMatchers(endpoint + "/species/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
             .userDetailsService(jpaUserDetailsService)
             .httpBasic(Customizer.withDefaults())
