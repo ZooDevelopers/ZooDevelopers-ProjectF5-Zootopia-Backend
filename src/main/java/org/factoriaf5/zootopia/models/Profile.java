@@ -68,13 +68,8 @@ public class Profile {
         return specie;
     }
 
-    public void setCountry(Species specie) {
+    public void setSpecie(Species specie) {
         this.specie = specie;
-    }
-
-    public void setProfile(String string) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setProfile'");
     }
 
 }
