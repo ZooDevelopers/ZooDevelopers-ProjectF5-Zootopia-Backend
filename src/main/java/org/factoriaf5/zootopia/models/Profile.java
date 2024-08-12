@@ -72,4 +72,9 @@ public class Profile {
         this.specie = specie;
     }
 
+    public void setProfile(String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setProfile'");
+    }
+
 }
