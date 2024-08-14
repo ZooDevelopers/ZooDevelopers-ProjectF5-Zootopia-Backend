@@ -3,13 +3,12 @@ package org.factoriaf5.zootopia.config;
 
 import java.util.Arrays;
 
-
+import org.factoriaf5.zootopia.facades.encryptations.Base64Encoder;
 import org.factoriaf5.zootopia.services.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -76,6 +75,11 @@ public class SecurityConfig {
         @Bean
         PasswordEncoder passwordEncoder() {
                 return new BCryptPasswordEncoder();
+        }
+
+        @Bean
+        Base64Encoder base64Encoder() {
+                return new Base64Encoder();
         }
         
     @Bean
