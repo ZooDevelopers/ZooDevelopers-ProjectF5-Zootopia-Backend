@@ -30,7 +30,7 @@ public class SpeciesController {
 
     @GetMapping
     public Page<Species> getAllSpecies(@RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "10") int size) {
+                                       @RequestParam(defaultValue = "30") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return speciesService.getAllSpecies(pageable);
     }
