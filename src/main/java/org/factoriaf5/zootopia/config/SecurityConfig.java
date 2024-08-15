@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,41 +40,42 @@ public class SecurityConfig {
     }
 
     @Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-    http
-        .cors(cors -> cors.configurationSource(corsConfiguration()))
-        .csrf(csrf -> csrf.disable())
-        .formLogin(form -> form
-            .loginProcessingUrl("/api/v1/login")
-            .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_OK))
-            .failureHandler((req, res, ex) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED)))
-        .logout(out -> out
-            .logoutUrl(endpoint + "/logout")
-            .deleteCookies("JSESSIONID"))
+        http
+            .cors(cors -> cors.configurationSource(corsConfiguration()))
+            .csrf(csrf -> csrf.disable())
+            .formLogin(form -> form
+                .loginProcessingUrl("/api/v1/login")
+                .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_OK))
+                .failureHandler((req, res, ex) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED)))
+            .logout(out -> out
+                .logoutUrl(endpoint + "/logout")
+                .deleteCookies("JSESSIONID"))
             .authorizeHttpRequests(auth -> auth
-            .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-            .requestMatchers("/api/v1/login").permitAll()
-            .requestMatchers(endpoint + "/species/**").hasRole("ADMIN")
-            .anyRequest().authenticated())
-        
-        .userDetailsService(jpaUserDetailsService)
-        .httpBasic(Customizer.withDefaults())
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+                .requestMatchers(HttpMethod.POST, endpoint + "/register").permitAll()
+                .requestMatchers("/api/v1/login").permitAll()
+                .requestMatchers(HttpMethod.GET, endpoint + "/login").hasRole( "ADMIN")
+                .requestMatchers(HttpMethod.GET, endpoint + "/dashboard").hasRole("ADMIN")
+                .requestMatchers(endpoint + "/species/**").hasRole("ADMIN")
+                .anyRequest().authenticated())
+            .userDetailsService(jpaUserDetailsService)
+            .httpBasic(Customizer.withDefaults())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
-    http.headers(header -> header.frameOptions(frame -> frame.sameOrigin()));
+        http.headers(header -> header.frameOptions(frame -> frame.sameOrigin()));
 
-    return http.build();
-}
-
+        return http.build();
+    }
 
     @Bean
     public CorsConfigurationSource corsConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Ajusta si es necesario
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Incluye OPTIONS
-        configuration.setAllowedHeaders(Arrays.asList("*")); // Permitir todos los encabezados
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); 
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -92,10 +94,10 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     @Bean
     public InMemoryUserDetailsManager userDetailsManager() {
         UserDetails admin = User.builder()
-                .username("Admin")
-                .password("{bcrypt}$2a$12$BJ3/svgLxyn7cLcsPXYSteK4wSVYRncL9V7dYLpKSAIE40A6rs1a6") // passsword
-                .roles("ADMIN")
-                .build();
+            .username("Admin")
+            .password("{bcrypt}$2a$12$BJ3/svgLxyn7cLcsPXYSteK4wSVYRncL9V7dYLpKSAIE40A6rs1a6") // password
+            .roles("ADMIN")
+            .build();
 
         return new InMemoryUserDetailsManager(admin);
     }
