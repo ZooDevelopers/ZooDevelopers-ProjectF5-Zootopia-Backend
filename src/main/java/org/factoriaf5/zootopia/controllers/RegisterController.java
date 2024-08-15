@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "${api-endpoint}/register")
+@RequestMapping(path = "/api/v1/register")
 public class RegisterController {
 
     private RegisterService service;
