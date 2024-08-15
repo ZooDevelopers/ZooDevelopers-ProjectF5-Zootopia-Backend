@@ -1,6 +1,5 @@
 package org.factoriaf5.zootopia.config;
 
-
 import java.util.Arrays;
 
 import org.factoriaf5.zootopia.facades.encryptations.Base64Encoder;
@@ -24,6 +23,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -33,67 +34,69 @@ public class SecurityConfig {
 
     JpaUserDetailsService jpaUserDetailsService;
 
-        public SecurityConfig(JpaUserDetailsService jpaUserDetailsService) {
-                this.jpaUserDetailsService = jpaUserDetailsService;
-        }
+    public SecurityConfig(JpaUserDetailsService jpaUserDetailsService) {
+        this.jpaUserDetailsService = jpaUserDetailsService;
+    }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-            .cors(Customizer.withDefaults())
-            .csrf(csrf -> csrf.disable())
-            .formLogin(form -> form.disable())
-            .logout(out -> out
-                .logoutUrl(endpoint + "/logout")
-                .deleteCookies("JSESSIONID"))
+    http
+        .cors(cors -> cors.configurationSource(corsConfiguration()))
+        .csrf(csrf -> csrf.disable())
+        .formLogin(form -> form
+            .loginProcessingUrl("/api/v1/login")
+            .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_OK))
+            .failureHandler((req, res, ex) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED)))
+        .logout(out -> out
+            .logoutUrl(endpoint + "/logout")
+            .deleteCookies("JSESSIONID"))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                .requestMatchers("/api/v1/login").hasRole("ADMIN")
-                .requestMatchers(endpoint + "/species/**").hasRole("ADMIN")
-                .anyRequest().authenticated())
-            .userDetailsService(jpaUserDetailsService)
-            .httpBasic(Customizer.withDefaults())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
-
-        http.headers(header -> header.frameOptions(frame -> frame.sameOrigin()));
-
-        return http.build();
-    }
-
-    @Bean
-        CorsConfigurationSource corsConfiguration() {
-                CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowCredentials(true);
-                configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                source.registerCorsConfiguration("/**", configuration);
-                return source;
-        }
-
-        @Bean
-        PasswordEncoder passwordEncoder() {
-                return new BCryptPasswordEncoder();
-        }
-
-        @Bean
-        Base64Encoder base64Encoder() {
-                return new Base64Encoder();
-        }
+            .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+            .requestMatchers("/api/v1/login").permitAll()
+            .requestMatchers(endpoint + "/species/**").hasRole("ADMIN")
+            .anyRequest().authenticated())
         
-    @Bean
-    public InMemoryUserDetailsManager userDetailsManager() {
-        UserDetails admin = User.builder()
-            .username("Admin")
-            .password("{bcrypt}$2a$12$BJ3/svgLxyn7cLcsPXYSteK4wSVYRncL9V7dYLpKSAIE40A6rs1a6") //passsword
-            .roles("ADMIN")
-            .build();
+        .userDetailsService(jpaUserDetailsService)
+        .httpBasic(Customizer.withDefaults())
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
-            return new InMemoryUserDetailsManager(admin);
-    }
+    http.headers(header -> header.frameOptions(frame -> frame.sameOrigin()));
+
+    return http.build();
 }
 
 
+    @Bean
+    public CorsConfigurationSource corsConfiguration() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Ajusta si es necesario
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Incluye OPTIONS
+        configuration.setAllowedHeaders(Arrays.asList("*")); // Permitir todos los encabezados
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
+    @Bean
+    Base64Encoder base64Encoder() {
+        return new Base64Encoder();
+    }
+
+    @Bean
+    public InMemoryUserDetailsManager userDetailsManager() {
+        UserDetails admin = User.builder()
+                .username("Admin")
+                .password("{bcrypt}$2a$12$BJ3/svgLxyn7cLcsPXYSteK4wSVYRncL9V7dYLpKSAIE40A6rs1a6") // passsword
+                .roles("ADMIN")
+                .build();
+
+        return new InMemoryUserDetailsManager(admin);
+    }
+}

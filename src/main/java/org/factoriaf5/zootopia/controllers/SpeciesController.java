@@ -6,8 +6,6 @@ import java.util.List;
 import org.factoriaf5.zootopia.models.Species;
 import org.factoriaf5.zootopia.services.SpeciesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,11 +27,10 @@ public class SpeciesController {
     private SpeciesService speciesService;
 
     @GetMapping
-    public Page<Species> getAllSpecies(@RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "30") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return speciesService.getAllSpecies(pageable);
-    }
+public List<Species> getAllSpecies() {
+    return speciesService.getAllSpecies(Pageable.unpaged()).getContent();
+}
+
 
     @PostMapping
     public Species createSpecies(@RequestBody Species species) {

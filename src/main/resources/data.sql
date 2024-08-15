@@ -6,9 +6,9 @@ INSERT INTO roles_users (role_id, user_id) VALUES (1, 1);
 INSERT INTO species (id, date_of_entry, family, gender, image_url, name, type)
 VALUES 
 -- Félidos (León, Tigre, Leopardo, etc...)
-(default, '2021-03-15', 'FELIDOS', 'Masculino', 'https://example.com/images/lion.jpg', 'Lion', 'León'),
-(default, '2021-03-16', 'FELIDOS', 'Femenino', 'https://example.com/images/tiger.jpg', 'Tiger', 'Tigre'),
-(default, '2021-03-17', 'FELIDOS', 'Masculino', 'https://example.com/images/leopard.jpg', 'Leopard', 'Leopardo'),
+(default, '2021-03-15', 'FELIDOS', 'Masculino', 'https://cdn.pixabay.com/photo/2020/02/05/19/14/lion-4822075_1280.jpg', 'Lion', 'León'),
+(default, '2021-03-16', 'FELIDOS', 'Femenino', 'https://cdn.pixabay.com/photo/2019/12/03/15/13/animal-4670258_1280.jpg', 'Tiger', 'Tigre'),
+(default, '2021-03-17', 'FELIDOS', 'Masculino', 'https://cdn.pixabay.com/photo/2022/06/01/12/25/leopard-7235632_1280.jpg', 'Leopard', 'Leopardo'),
 (default, '2021-03-18', 'FELIDOS', 'Femenino', 'https://example.com/images/cheetah.jpg', 'Cheetah', 'Guepardo'),
 (default, '2021-03-19', 'FELIDOS', 'Masculino', 'https://example.com/images/jaguar.jpg', 'Jaguar', 'Jaguar'),
 
